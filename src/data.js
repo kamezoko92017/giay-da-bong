@@ -39,3 +39,18 @@ export const categories = [
         title: "SHIRT STYLE"
     }
 ]
+
+export const popularProducts = [
+    {
+        id: 1,
+        img: "https://fakeimg.pl/350x200/?text=World&font=lobster"
+    },
+    {
+        id: 2,
+        img: "https://fakeimg.pl/350x200/?text=World&font=lobster"
+    },
+    {
+        id: 3,
+        img: "https://fakeimg.pl/350x200/?text=World&font=lobster"
+    }
+]
