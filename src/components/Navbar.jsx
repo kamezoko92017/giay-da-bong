@@ -67,7 +67,7 @@ const Navbar = () => {
 
                 </Left>
                 <Center>
-                    <Logo>HN</Logo>
+                    <Logo>HaiNguyen</Logo>
                 </Center>
                 <Right>
                     <MenuItem>REGISTER</MenuItem>
