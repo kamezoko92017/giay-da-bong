@@ -43,7 +43,7 @@ export const categories = [
 export const popularProducts = [
     {
         id: 1,
-        img: "https://fakeimg.pl/350x200/?text=World&font=lobster"
+        img: "https://www.freepik.com/free-vector/set-sport-shoes-sneakers-different-views_11053410.htm#query=shoes&position=19&from_view=search"
     },
     {
         id: 2,
