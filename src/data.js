@@ -26,17 +26,20 @@ export const categories = [
     {
         id: 1,
         img: "https://fakeimg.pl/350x200/?text=World&font=lobster",
-        title: "SHIRT STYLE"
+        title: "SHIRT STYLE",
+        cat: "women"
     },
     {
         id: 2,
         img: "https://fakeimg.pl/350x200/?text=World&font=lobster",
-        title: "SHIRT STYLE"
+        title: "SHIRT STYLE",
+        cat: "cost"
     },
     {
         id: 3,
         img: "https://fakeimg.pl/350x200/?text=World&font=lobster",
-        title: "SHIRT STYLE"
+        title: "SHIRT STYLE",
+        cat: "jeans"
     }
 ]
 
@@ -54,3 +57,5 @@ export const popularProducts = [
         img: "https://fakeimg.pl/350x200/?text=World&font=lobster"
     }
 ]
+
+export const URL_SERVER = "http://localhost:5000";
