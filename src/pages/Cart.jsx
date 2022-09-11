@@ -5,6 +5,17 @@ import Navbar from '../components/Navbar';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { mobile } from '../responsive';
+import { useSelector } from 'react-redux';
+import StripeCheckout from "react-stripe-checkout";
+import { useState } from 'react';
+import { userRequest } from "../requestMethods";
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+// const dotenv = require("dotenv");
+// dotenv.config();
+
+
+const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div`
     
@@ -45,6 +56,7 @@ const TopText = styled.span`
 const Bottom = styled.div`
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
     ${mobile({ flexDirection: "column" })}
 `
 const Info = styled.div`
@@ -132,6 +144,54 @@ const Button = styled.button`
 `
 
 const Cart = () => {
+    const cart = useSelector(state => state.cart);
+    const initQuantity = [];
+    cart.products.map((product) => {
+        initQuantity.push({
+            productId: product._id,
+            quantity: product.quantity
+        })
+    });
+
+    const [stripeToken, setStripeToken] = useState(null);
+    const [quantity, setQuantity] = useState(initQuantity);
+    const navigate = useNavigate();
+    console.log('key: ', KEY);
+
+    const onToken = (token) => {
+        setStripeToken(token)
+    }
+
+    useEffect(() => {
+        const makeRequest = async () => {
+            try {
+                const res = await userRequest.post("/checkout/payment", {
+                    tokenId: stripeToken.id,
+                    amount: cart.total * 100,
+                });
+                navigate("/success", { data: res.data });
+            } catch { }
+        }
+
+        stripeToken && makeRequest();
+    }, [stripeToken, cart.total, navigate]);
+
+    const handleQuantity = (type, product) => {
+        if (type === "dec") {
+            console.log('product-handleQuantity: ', product)
+            // const newQuantity = quantity;
+            // newQuantity.map((p) => {
+            //     if (p.id === productId) {
+            //         if (p.quantity > 1) {
+            //             p.quantity -= 1;
+            //         }
+            //     }
+            // }); setQuantity(newQuantity);
+        } else {
+            // setQuantity(quantity + 1);
+        }
+    };
+
     return (
         <Container>
             <Navbar />
@@ -148,77 +208,43 @@ const Cart = () => {
                 </Top>
                 <Bottom>
                     <Info>
-                        <ProductDetail>
-                            <Image src="https://fakeimg.pl/350x200/?text=World&font=lobster" />
-                            <Details>
-                                <ProductName>
-                                    <b>Product: </b>JESSIE THUNDER SHOES
-                                </ProductName>
-                                <ProductId><b>ID: </b>9845430589034</ProductId>
-                                <ProductColor color="black" />
-                                <ProductSize><b>Size: </b>37.5</ProductSize>
-                            </Details>
+                        {cart.products.map((product) => (
+                            <Product>
+                                <ProductDetail>
+                                    <Image src={product.img} />
+                                    <Details>
+                                        <ProductName>
+                                            <b>Product:</b> {product.title}
+                                        </ProductName>
+                                        <ProductId>
+                                            <b>ID:</b> {product._id}
+                                        </ProductId>
+                                        <ProductColor color={product.color} >
 
-                        </ProductDetail>
-                        <PriceDetail>
-                            <ProductAmountContainer>
-                                <AddCircleIcon />
-                                <ProductAmount>2</ProductAmount>
-                                <RemoveCircleIcon />
-                            </ProductAmountContainer>
-                            <ProductPrice>$ 30</ProductPrice>
-                        </PriceDetail>
-                        <Hr />
-
-                        <ProductDetail>
-                            <Image src="https://fakeimg.pl/350x200/?text=World&font=lobster" />
-                            <Details>
-                                <ProductName>
-                                    <b>Product: </b>JESSIE THUNDER SHOES
-                                </ProductName>
-                                <ProductId><b>ID: </b>9845430589034</ProductId>
-                                <ProductColor color="black" />
-                                <ProductSize><b>Size: </b>37.5</ProductSize>
-                            </Details>
-
-                        </ProductDetail>
-                        <PriceDetail>
-                            <ProductAmountContainer>
-                                <AddCircleIcon />
-                                <ProductAmount>2</ProductAmount>
-                                <RemoveCircleIcon />
-                            </ProductAmountContainer>
-                            <ProductPrice>$ 30</ProductPrice>
-                        </PriceDetail>
-
-                        <Hr />
-
-                        <ProductDetail>
-                            <Image src="https://fakeimg.pl/350x200/?text=World&font=lobster" />
-                            <Details>
-                                <ProductName>
-                                    <b>Product: </b>JESSIE THUNDER SHOES
-                                </ProductName>
-                                <ProductId><b>ID: </b>9845430589034</ProductId>
-                                <ProductColor color="black" />
-                                <ProductSize><b>Size: </b>37.5</ProductSize>
-                            </Details>
-
-                        </ProductDetail>
-                        <PriceDetail>
-                            <ProductAmountContainer>
-                                <AddCircleIcon />
-                                <ProductAmount>2</ProductAmount>
-                                <RemoveCircleIcon />
-                            </ProductAmountContainer>
-                            <ProductPrice>$ 30</ProductPrice>
-                        </PriceDetail>
+                                        </ProductColor>
+                                        <ProductSize>
+                                            <b>Size:</b> {product.size}
+                                        </ProductSize>
+                                    </Details>
+                                </ProductDetail>
+                                <PriceDetail>
+                                    <ProductAmountContainer>
+                                        <AddCircleIcon onClick={() => handleQuantity("inc", product)} />
+                                        <ProductAmount>{product.quantity} </ProductAmount>
+                                        <RemoveCircleIcon onClick={() => handleQuantity("dec", product)} />
+                                    </ProductAmountContainer>
+                                    <ProductPrice>
+                                        $ {product.price * product.quantity}
+                                    </ProductPrice>
+                                </PriceDetail>
+                            </Product>
+                        ))}
                     </Info>
                     <Summary>
                         <SummaryTitle>ORDER SUMMARY</SummaryTitle>
                         <SummaryItem>
                             <SummaryItemText>Subtotal</SummaryItemText>
-                            <SummaryItemPrice>$ 80</SummaryItemPrice>
+                            <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
                         </SummaryItem>
                         <SummaryItem>
                             <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -230,9 +256,21 @@ const Cart = () => {
                         </SummaryItem>
                         <SummaryItem type="total">
                             <SummaryItemText >Total</SummaryItemText>
-                            <SummaryItemPrice>$ 5.9</SummaryItemPrice>
+                            <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
                         </SummaryItem>
-                        <Button>CHECKOUT NOW</Button>
+                        <StripeCheckout
+                            name="Hai Nguyen"
+                            image=""
+                            billingAddress
+                            shippingAddress
+                            description={`Tong so tien la $ ${cart.total}`}
+                            amount={cart.total * 100}
+                            token={onToken}
+                            stripeKey={KEY}
+                        >
+                            <Button>CHECKOUT NOW</Button>
+                        </StripeCheckout>
+
                     </Summary>
                 </Bottom>
             </Wrapper>
