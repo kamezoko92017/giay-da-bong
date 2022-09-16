@@ -10,21 +10,23 @@ import {
 import Home from "./pages/home/Home";
 import UserList from "./pages/userList/UserList";
 import User from "./pages/user/User";
+import NewUser from "./pages/newUser/NewUser";
 
 function App() {
   return (
     <div>
-      <Topbar />
-      <div className="container">
-        <Sidebar />
-        <Router>
+      <Router>
+        <Topbar />
+        <div className="container">
+          <Sidebar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="users" element={<UserList />} />
             <Route path="user/:userId" element={<User />} />
+            <Route path="newUser" element={<NewUser />} />
           </Routes>
-        </Router>
-      </div>
+        </div>
+      </Router>
     </div>
   );
 }
