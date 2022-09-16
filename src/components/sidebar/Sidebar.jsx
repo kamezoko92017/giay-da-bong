@@ -11,7 +11,6 @@ import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 import ReportIcon from '@mui/icons-material/Report';
-// import { Link } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -21,10 +20,12 @@ const Sidebar = () => {
                 <div className="sidebarMenu">
                     <h3 className="sidebarTitle">Dashboard</h3>
                     <ul className="sidebarList">
-                        <li className="sidebarListItem active">
-                            <LineStyleIcon className="sidebarIcon" />
-                            Home
-                        </li>
+                        <Link to="/" className="link">
+                            <li className="sidebarListItem active">
+                                <LineStyleIcon className="sidebarIcon" />
+                                Home
+                            </li>
+                        </Link>
                         <li className="sidebarListItem">
                             <TimelineIcon className="sidebarIcon" />
                             Analytics
