@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = "http://localhost:5000/api/";
+const BASE_URL = "https://giay-da-bong.herokuapp.com/api/";
 // const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMGY3NGJkZjc5ZTU5ZWM3YmZkNTMwOCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY2MjY0NTUwMiwiZXhwIjoxNjYyOTA0NzAyfQ.-RJJbTR_MJ-A8jKjaeVB5TF60vpzprlfQvxdgGrL7_w";
 let TOKEN = "";
 if (JSON.parse(localStorage.getItem("persist:root"))) {
