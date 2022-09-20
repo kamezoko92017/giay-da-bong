@@ -1,0 +1,21 @@
+I. Deployment phần backend
+- Vào phần Setting của app trên Heroku, ở phần Config Vars,
+ chọn Reveal Config Vars. Thêm các biến (trong file .env): 
+ MONGO_URL=
+PORT=
+PASS_SECRET=
+JWT_SECRET=
+STRIPE_KEY=
+
+II. Deployment phần admin
+- Trong file requestMothods.js (thư mục src) sửa lại biến BASE_URL:
+ BASE_URL = "https://giay-da-bong.herokuapp.com/api/"
+ (url của backend)
+
+III. Deployment phần frontend
+- Trong file requestMothods.js (thư mục src) sửa lại biến BASE_URL:
+ BASE_URL = "https://giay-da-bong.herokuapp.com/api/"
+ (url của backend)
+- Trong file data.js (thư mục src) sửa lại biến URL_SERVER:
+    URL_SERVER = "https://giay-da-bong.herokuapp.com";
+    (url của backend)
