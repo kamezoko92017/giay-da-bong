@@ -85,7 +85,7 @@ const NewProduct = () => {
                     <input
                         name="title"
                         type="text"
-                        placeholder="Apple Airpods"
+                        placeholder="product's name"
                         onChange={handleChange}
                     />
                 </div>
@@ -103,13 +103,13 @@ const NewProduct = () => {
                     <input
                         name="price"
                         type="number"
-                        placeholder="100"
+                        placeholder="price"
                         onChange={handleChange}
                     />
                 </div>
                 <div className="addProductItem">
                     <label>Categories</label>
-                    <input type="text" placeholder="jeans,skirts" onChange={handleCat} />
+                    <input type="text" onChange={handleCat} />
                 </div>
                 <div className="addProductItem">
                     <label>Stock</label>

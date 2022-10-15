@@ -24,7 +24,6 @@ const Product = () => {
     const [pStats, setPStats] = useState([]);
     const [inputs, setInputs] = useState(product);
     const [file, setFile] = useState([product['img']]);
-    console.log('file ban dau:', file)
     const [cat, setCat] = useState(product['categories']);
     const dispatch = useDispatch();
 
@@ -196,7 +195,6 @@ const Product = () => {
 
                                 onChange={(e) => {
                                     setFile(e.target.files[0]);
-                                    console.log('file:', file)
                                 }}
                             />
                         </div>

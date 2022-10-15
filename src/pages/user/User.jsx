@@ -1,5 +1,5 @@
 import "./user.css";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
@@ -7,7 +7,81 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
 import PublishIcon from '@mui/icons-material/Publish';
 
+
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+// import { userRequest } from "../../requestMethods";
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+} from "firebase/storage";
+import app from "../../firebase";
+import { updateUser } from "../../redux/apiCalls";
+
 const User = () => {
+    const location = useLocation();
+    const userId = location.pathname.split("/")[2];
+    const user = useSelector((state) =>
+        state.user.allUsers.users.find((user) => user._id === userId)
+    );
+
+    // const [pStats, setPStats] = useState([]);
+    const [inputs, setInputs] = useState(user);
+    const [file, setFile] = useState([user['avatar']]);
+    const dispatch = useDispatch();
+
+    const handleChange = (e) => {
+        setInputs((prev) => {
+            return { ...prev, [e.target.name]: e.target.value };
+        });
+    };
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        const fileName = new Date().getTime() + file.name;
+        const storage = getStorage(app);
+        const storageRef = ref(storage, fileName);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                // Observe state change events such as progress, pause, and resume
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log("Upload is " + progress + "% done");
+                switch (snapshot.state) {
+                    case "paused":
+                        console.log("Upload is paused");
+                        break;
+                    case "running":
+                        console.log("Upload is running");
+                        break;
+                    default:
+                }
+            },
+            (error) => {
+                // Handle unsuccessful uploads
+            },
+            () => {
+                // Handle successful uploads on complete
+                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    const user = { _id: userId, ...inputs, avatar: downloadURL };
+                    // console.log('user:', user);
+                    updateUser(userId, user, dispatch);
+                });
+            }
+        );
+    };
+
     return (
         <div className="user">
             <div className="userTitleContainer">
@@ -20,37 +94,37 @@ const User = () => {
                 <div className="userShow">
                     <div className="userShowTop">
                         <img
-                            src="https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                            src={file}
                             alt=""
                             className="userShowImg"
                         />
                         <div className="userShowTopTitle">
-                            <span className="userShowUsername">Anna Becker</span>
-                            <span className="userShowUserTitle">Software Engineer</span>
+                            <span className="userShowUsername">{user.username}</span>
+                            <span className="userShowUserTitle">{user.isAdmin ? "administrator" : "user normal"}</span>
                         </div>
                     </div>
                     <div className="userShowBottom">
                         <span className="userShowTitle">Account Details</span>
                         <div className="userShowInfo">
                             <PermIdentityIcon className="userShowIcon" />
-                            <span className="userShowInfoTitle">annabeck99</span>
+                            <span className="userShowInfoTitle">{user.fullname}</span>
                         </div>
-                        <div className="userShowInfo">
+                        {/* <div className="userShowInfo">
                             <CalendarTodayIcon className="userShowIcon" />
                             <span className="userShowInfoTitle">10.12.1999</span>
-                        </div>
+                        </div> */}
                         <span className="userShowTitle">Contact Details</span>
-                        <div className="userShowInfo">
+                        {/* <div className="userShowInfo">
                             <PhoneAndroidIcon className="userShowIcon" />
                             <span className="userShowInfoTitle">+1 123 456 67</span>
-                        </div>
+                        </div> */}
                         <div className="userShowInfo">
                             <MailOutlineIcon className="userShowIcon" />
-                            <span className="userShowInfoTitle">annabeck99@gmail.com</span>
+                            <span className="userShowInfoTitle">{user.email}</span>
                         </div>
                         <div className="userShowInfo">
                             <LocationSearchingIcon className="userShowIcon" />
-                            <span className="userShowInfoTitle">New York | USA</span>
+                            <span className="userShowInfoTitle">{user.address}</span>
                         </div>
                     </div>
                 </div>
@@ -64,7 +138,9 @@ const User = () => {
                                 <label>Username</label>
                                 <input
                                     type="text"
-                                    placeholder="annabeck99"
+                                    value={inputs['username']}
+                                    name="username"
+                                    onChange={handleChange}
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -72,7 +148,9 @@ const User = () => {
                                 <label>Full Name</label>
                                 <input
                                     type="text"
-                                    placeholder="Anna Becker"
+                                    value={inputs['fullname']}
+                                    name="fullname"
+                                    onChange={handleChange}
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -80,23 +158,27 @@ const User = () => {
                                 <label>Email</label>
                                 <input
                                     type="text"
-                                    placeholder="annabeck99@gmail.com"
+                                    value={inputs['email']}
+                                    name="email"
+                                    onChange={handleChange}
                                     className="userUpdateInput"
                                 />
                             </div>
-                            <div className="userUpdateItem">
+                            {/* <div className="userUpdateItem">
                                 <label>Phone</label>
                                 <input
                                     type="text"
                                     placeholder="+1 123 456 67"
                                     className="userUpdateInput"
                                 />
-                            </div>
+                            </div> */}
                             <div className="userUpdateItem">
                                 <label>Address</label>
                                 <input
                                     type="text"
-                                    placeholder="New York | USA"
+                                    value={inputs['address']}
+                                    name="address"
+                                    onChange={handleChange}
                                     className="userUpdateInput"
                                 />
                             </div>
@@ -105,15 +187,19 @@ const User = () => {
                             <div className="userUpdateUpload">
                                 <img
                                     className="userUpdateImg"
-                                    src="https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                                    src={file}
                                     alt=""
                                 />
                                 <label htmlFor="file">
                                     <PublishIcon className="userUpdateIcon" />
                                 </label>
-                                <input type="file" id="file" style={{ display: "none" }} />
+                                <input type="file" id="file" style={{ display: "none" }}
+                                    onChange={(e) => {
+                                        setFile(e.target.files[0]);
+                                    }}
+                                />
                             </div>
-                            <button className="userUpdateButton">Update</button>
+                            <button className="userUpdateButton" onClick={handleUpdate}>Update</button>
                         </div>
                     </form>
                 </div>

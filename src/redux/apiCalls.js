@@ -1,4 +1,3 @@
-import { loginFailure, loginStart, loginSuccess } from "./userRedux";
 import { publicRequest, userRequest } from "../requestMethods";
 import {
     getProductFailure,
@@ -15,6 +14,24 @@ import {
     addProductSuccess,
 } from "./productRedux";
 
+import {
+    loginFailure,
+    loginStart,
+    loginSuccess,
+    getAllUsersStart,
+    getAllUsersSuccess,
+    getAllUsersFailure,
+    addUserStart,
+    addUserSuccess,
+    addUserFailure,
+    deleteUserStart,
+    deleteUserSuccess,
+    deleteUserFailure,
+    updateUserStart,
+    updateUserSuccess,
+    updateUserFailure,
+} from "./userRedux";
+
 export const login = async (dispatch, user) => {
     dispatch(loginStart());
     try {
@@ -24,7 +41,49 @@ export const login = async (dispatch, user) => {
         dispatch(loginFailure)
     }
 }
-
+//get all users
+export const getAllUsers = async (dispatch, user) => {
+    dispatch(getAllUsersStart());
+    try {
+        const res = await userRequest.get("/users");
+        dispatch(getAllUsersSuccess(res.data));
+    } catch (err) {
+        dispatch(getAllUsersFailure());
+    }
+}
+//create new user
+export const addUser = async (user, dispatch) => {
+    dispatch(addUserStart());
+    try {
+        const res = await userRequest.post(`/users`, user);
+        console.log('res.data: ', res.data);
+        dispatch(addUserSuccess(res.data));
+    } catch (err) {
+        dispatch(addUserFailure());
+    }
+};
+//update user
+export const updateUser = async (id, user, dispatch) => {
+    dispatch(updateUserStart());
+    try {
+        // update
+        const res = await userRequest.put(`/users/${id}`, user);
+        dispatch(updateUserSuccess({ id, user }));
+    } catch (err) {
+        dispatch(updateUserFailure());
+    }
+};
+//delete user
+export const deleteUser = async (id, dispatch) => {
+    dispatch(deleteUserStart());
+    try {
+        const res = await userRequest.delete(`/users/${id}`);
+        dispatch(deleteUserSuccess(id));
+    } catch (err) {
+        dispatch(deleteUserFailure());
+    }
+};
+//get all products
 export const getProducts = async (dispatch) => {
     dispatch(getProductStart());
     try {
