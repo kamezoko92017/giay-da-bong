@@ -1,6 +1,6 @@
 import "./productList.css";
 import { DataGrid } from '@mui/x-data-grid';
-import { productRows } from "../../dummyData";
+// import { productRows } from "../../dummyData";
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "../../redux/apiCalls";
 
 const ProductList = () => {
-    const [data, setData] = useState(productRows);
+    // const [data, setData] = useState(productRows);
     const dispatch = useDispatch();
     const products = useSelector((state) => state.product.products);
 

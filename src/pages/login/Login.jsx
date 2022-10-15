@@ -1,17 +1,23 @@
 import React from 'react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Redirect } from 'react-router-dom';
 import { login } from "../../redux/apiCalls";
+import { useLocation, useNavigate } from "react-router";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleClick = (e) => {
         e.preventDefault();
         login(dispatch, { username, password });
+        console.log('da login');
+        // <Navigate to="http://localhost:3000/" />
+        // <Redirect to={""} />
+        // navigate("");
     }
 
     return (
