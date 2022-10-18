@@ -7,6 +7,10 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { mobile } from "../responsive";
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import { styled as mystyle } from '@mui/system';
+import MyAppBar from './MyAppBar';
+import { Typography } from '@mui/material';
 
 const Container = styled.div`
     height:60px;
@@ -62,36 +66,47 @@ margin - left: 25px;
 ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `
 const Navbar = () => {
+    const MyTypography = mystyle(Typography)({
+        backgroundColor: '#52A388',
+        color: 'red'
+    })
     const quantity = useSelector(state => state.cart.quantity);
     console.log('quantity: ', quantity)
     return (
-        <Container>
-            <Wrapper>
-                <Left>
-                    <Language>EN</Language>
-                    <SearchContainer>
-                        <Input placeholder='Search'></Input>
-                        <SearchIcon style={{ color: 'gray', fontSize: 16 }} />
-                    </SearchContainer>
+        // <Container>
+        //     <Wrapper>
+        //         <Left>
+        //             <Language>EN</Language>
+        //             <SearchContainer>
+        //                 <Input placeholder='Search'></Input>
+        //                 <SearchIcon style={{ color: 'gray', fontSize: 16 }} />
+        //             </SearchContainer>
 
-                </Left>
-                <Center>
-                    <Logo>HaiNguyen</Logo>
-                </Center>
-                <Right>
-                    <MenuItem>REGISTER</MenuItem>
-                    <MenuItem>LOGIN</MenuItem>
-                    <Link to="/cart">
-                        <MenuItem>
-                            <Badge badgeContent={quantity} color="primary">
-                                <ShoppingCartOutlinedIcon />
-                            </Badge>
-                        </MenuItem>
-                    </Link>
-                </Right>
-            </Wrapper>
+        //         </Left>
+        //         <Center>
+        //             <Logo>HN Store</Logo>
+        //         </Center>
+        //         <Right>
+        //             <MenuItem>REGISTER</MenuItem>
+        //             <MenuItem>LOGIN</MenuItem>
+        //             <Link to="/cart">
+        //                 <MenuItem>
+        //                     <Badge badgeContent={quantity} color="primary">
+        //                         <ShoppingCartOutlinedIcon />
+        //                     </Badge>
+        //                 </MenuItem>
+        //             </Link>
+        //         </Right>
+        //     </Wrapper>
+        // </Container >
 
-        </Container >
+
+        <>
+            <MyAppBar />
+            <MyTypography>My Typography</MyTypography>
+
+        </>
+
     )
 }
 

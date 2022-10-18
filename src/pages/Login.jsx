@@ -1,93 +1,111 @@
+import * as React from 'react';
 import { useState } from 'react';
-import styled from 'styled-components';
-import { login } from '../redux/apiCalls';
-import { mobile } from '../responsive';
 import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../redux/apiCalls';
+import GGLogin from '../components/GGLogin';
 
-const Container = styled.div`
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`
-const Wrapper = styled.div`
-    padding: 20px;
-    width: 25%;
-    background-color: white;
-    ${mobile({ width: "75%" })}
-`
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-`
-const Title = styled.h1`
-    font-size: 24px;
-    font-weight: 300;
-`
-const Input = styled.input`
-    flex: 1;
-    min-width: 40%;
-    margin: 10px 0px;
-    padding: 10px;
-`
-const Button = styled.button`
-    width: 40%;
-    border: none;
-    padding: 15px 20px;
-    background-color: teal;
-    color: white;
-    cursor: pointer;
-    margin-bottom: 10px;
-    &:disabled{
-        color: green;
-        cursor: not-allowed;
-    }
-`
-const Error = styled.span`
-    color: red;
-`
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const Link = styled.a`
-    margin: 5px 0;
-    font-size: 12px;
-    text-decoration: underline;
-    cursor: pointer;
-`
+const theme = createTheme();
 
-const Login = () => {
+export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
     const { isFetching, error } = useSelector((state) => state.user);
 
-    const handleClick = (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
         login(dispatch, { username, password });
-    }
+
+        // const data = new FormData(event.currentTarget);
+        // console.log({
+        //     email: data.get('email'),
+        //     password: data.get('password'),
+        // });
+    };
 
     return (
-        <Container>
-            <Wrapper>
-                <Title>CREATE AN ACCOUNT</Title>
-                <Form>
-                    <Input placeholder="username"
-                        onChange={(e) => { setUsername(e.target.value) }}
-                    />
-                    <Input placeholder="password"
-                        onChange={(e) => { setPassword(e.target.value) }}
-                    />
-                    <Button
-                        onClick={handleClick}
-                        disabled={isFetching}
-                    >LOGIN</Button>
-                    {error && <Error>Something went wrong...</Error>}
-                    <Link>DO NOT YOU REMEMBER THE PASSWORD ?</Link>
-                    <Link>CREATE A NEW ACCOUNT</Link>
-                </Form>
-            </Wrapper>
-        </Container>
-    )
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            onChange={(e) => { setUsername(e.target.value) }}
+                        />
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            onChange={(e) => { setPassword(e.target.value) }}
+                        />
+                        <FormControlLabel
+                            control={<Checkbox value="remember" color="primary" />}
+                            label="Remember me"
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Sign In
+                        </Button>
+                        <Button> <GGLogin text={"Log in with Google"} /></Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="#" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
 }
-
-export default Login
