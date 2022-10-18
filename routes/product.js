@@ -22,7 +22,6 @@ router.post("/", verifyTokenAndAdmin, async (req, res) => {
 //UPDATE PRODUCT (chỉ Admin thực hiện được request)
 
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
-
     try {
         const updateProduct = await Product.findByIdAndUpdate(
             req.params.id,
@@ -40,7 +39,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
     try {
-        await Product.findById(req.params.id);
+        await Product.findByIdAndDelete(req.params.id);
         res.status(200).json("Da xoa san pham !");
     } catch (err) {
         res.status(500).json(err);

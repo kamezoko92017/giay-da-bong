@@ -6,6 +6,25 @@ const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin }
 
 const router = require('express').Router();
 
+//login by Google
+router.post("/loginGoogle", async (req, res) => {
+    return res.status(200).json({ success: true, usersid: 'id response from server' });
+    // process to save to Database
+})
+
+//create new user normal (tất cả user thực hiện được request)
+router.post("/", async (req, res) => {
+    const newUser = new User(req.body);
+    try {
+        const savedUser = await newUser.save();
+
+        res.status(200).json(savedUser);
+    } catch (err) {
+        res.status(500).json(err)
+    }
+})
+
+//update user
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     if (req.body.password) {
         //Nếu người dùng nhập password mới thì mã hóa pass này để update password
@@ -16,7 +35,6 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     }
 
     try {
-        console.log(req.body);
         const updateUser = await User.findByIdAndUpdate(req.params.id, {
 
             $set: req.body
@@ -29,7 +47,7 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
 
 router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
     try {
-        await User.findById(req.params.id);
+        await User.findByIdAndDelete(req.params.id);
         res.status(200).json('Da xoa user !');
     } catch (err) {
         res.status(500).json(err);
