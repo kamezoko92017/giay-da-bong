@@ -1,5 +1,5 @@
 const Product = require('../models/Product');
-const CryptoJS = require('crypto-js');
+// const CryptoJS = require('crypto-js');
 
 const { verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin }
     = require('./verifyToken');

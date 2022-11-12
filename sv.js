@@ -5,16 +5,18 @@ const dotenv = require("dotenv");
 const userRouter = require("./routes/user.js");
 const authRouter = require("./routes/auth.js");
 const productRouter = require("./routes/product.js");
-const categoryRouter = require("./routes/categories.js");
 const cartRouter = require("./routes/cart.js");
 const orderRouter = require("./routes/order.js");
 
 dotenv.config();
 const PORT_BACKEND = process.env.PORT || 8000;
 
+// MONGO_URL=mongodb+srv://hainguyen:12345@cluster0.vz5lssj.mongodb.net/giay_da_bong?retryWrites=true&w=majority
+
+
 mongoose.connect(process.env.MONGO_URL)
     .then(() => { console.log('Connect to database success!') })
-    .catch((err) => { console.log('Error connect to database: ', err) });
+    .catch((err) => { console.log('Loi ket noi: ', err) });
 
 //để server có thể nhận các request có body truyền dạng JSON
 app.use(express.json());
@@ -28,18 +30,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use("/api/users", userRouter);
-// app.use("/api/social", router_social);
-app.use("/api/auth", authRouter);
-app.use("/api/products", productRouter);
-app.use("/api/carts", cartRouter);
-app.use("/api/categories",categoryRouter);
-app.use("/api/orders", orderRouter);
 
-// app.listen(PORT_BACKEND, () => {
-//     console.log("Backend server is running - port ", PORT_BACKEND)
-// })
-
-app.listen(9999, () => {
-    console.log("Backend server is running - port 9999")
+app.listen(PORT_BACKEND, () => {
+    console.log("Backend server dang chay tren - port ", PORT_BACKEND)
 })
